@@ -105,7 +105,7 @@ class TestReadCsv:
         csv_file = tmp_path / "empty.csv"
         csv_file.write_text("", encoding="utf-8")
 
-        with pytest.raises((ValueError, StopIteration, Exception)):
+        with pytest.raises(ValueError, match="sem cabeçalho"):
             read_csv(csv_file)
 
 

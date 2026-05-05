@@ -125,6 +125,8 @@ class BaseAutomation(ABC):
                     )
                     self.logger.info("  ✓ Sucesso: %s", identificador)
                 except Exception as exc:  # noqa: BLE001
+                    # captura qualquer erro (timeout, elemento não encontrado, etc.)
+                    # para registrar o resultado e continuar com as próximas linhas
                     mensagem = str(exc)
                     writer.add_error(
                         linha=idx,
@@ -207,7 +209,13 @@ class BaseAutomation(ABC):
         try:
             return page.get_by_label(fallback_label, exact=False)
         except Exception:  # noqa: BLE001
-            pass
+            # get_by_label pode lançar se o label não existir; tenta fallback por name
+            self.logger.debug(
+                "Campo '%s' não encontrado por label '%s', tentando name='%s'",
+                data_testid,
+                fallback_label,
+                fallback_name,
+            )
 
         # fallback 2: por name
         return page.locator(f'[name="{fallback_name}"]').first

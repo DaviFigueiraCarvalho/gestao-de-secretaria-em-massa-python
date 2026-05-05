@@ -87,7 +87,7 @@ _ROUTES: dict[str, bytes] = {
 class _Handler(BaseHTTPRequestHandler):
     """Handler HTTP simples que serve HTML estático por rota."""
 
-    def do_GET(self) -> None:  # noqa: N802
+    def do_GET(self) -> None:  # noqa: N802 — nome definido pela interface BaseHTTPRequestHandler
         # ignora query string ao buscar a rota
         path = self.path.split("?")[0]
         body = _ROUTES.get(path, b"<h1>404</h1>")
