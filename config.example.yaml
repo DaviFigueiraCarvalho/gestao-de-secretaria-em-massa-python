@@ -1,0 +1,32 @@
+# Configuração de exemplo para a ferramenta de automação
+# Copie este arquivo para config.yaml e ajuste os valores
+
+# URL base da aplicação (sem barra no final)
+base_url: "http://localhost:3000"
+
+# Credenciais de login
+credentials:
+  username: "admin"
+  password: "senha_aqui"
+
+# Configurações do navegador
+browser:
+  headless: true          # true = sem janela visual, false = com janela
+  slow_mo: 0              # milissegundos de delay entre ações (útil para debug)
+  timeout: 30000          # timeout padrão em milissegundos
+  viewport:
+    width: 1280
+    height: 720
+
+# Caminhos dos CSVs de cada entidade (pode ser sobrescrito via CLI)
+csv_paths:
+  churches: "examples/igrejas.csv"
+  cells: "examples/celulas.csv"
+  members: "examples/membros.csv"
+  commissions: "examples/comissoes.csv"
+  families: "examples/familias.csv"
+
+# Configurações de saída
+output:
+  dir: "results"          # pasta onde serão salvos os resultados
+  format: "csv"           # "csv" ou "json"

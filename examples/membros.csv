@@ -1,0 +1,6 @@
+nome,email,telefone,data_nascimento,endereco,celula,cargo,data_batismo,estado_civil
+João Pereira da Silva,joao.silva@email.com,(11) 91111-1111,1990-05-20,Rua das Flores 10,Célula Esperança,Diácono,2010-03-01,Casado
+Maria Aparecida Santos,maria.santos@email.com,(11) 92222-2222,1985-08-15,Av. Brasil 200,Célula Renovação,Presbítera,2008-07-12,Casada
+Carlos Eduardo Lima,carlos.lima@email.com,(21) 93333-3333,1995-12-01,Rua Ipanema 33,Célula Paz e Amor,Membro,2015-11-20,Solteiro
+Ana Paula Ferreira,ana.ferreira@email.com,(31) 94444-4444,2000-02-28,Rua das Acácias 5,Célula Shekinah,Membro,,Solteira
+Roberto Carlos Souza,roberto.souza@email.com,(41) 95555-5555,1978-07-04,Av. Liberdade 88,Célula Maranata,Líder,2000-05-30,Divorciado
