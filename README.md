@@ -60,38 +60,35 @@ cp config.example.yaml config.yaml
 ## Uso rápido
 
 ```bash
-# Importar igrejas
-python -m automation churches import --csv examples/igrejas.csv
+# ── dev (localhost:3000) ──────────────────────────────────────────────────
+python -m automation churches import --env dev --csv examples/igrejas.csv
+python -m automation login-test --env dev
 
-# Importar células
-python -m automation cells import --csv examples/celulas.csv
+# ── prod (app.icravivalista) ─────────────────────────────────────────────
+python -m automation churches import --env prod --csv examples/igrejas.csv
+python -m automation login-test --env prod
 
-# Importar membros
-python -m automation members import --csv examples/membros.csv
-
-# Importar comissões
-python -m automation commissions import --csv examples/comissoes.csv
-
-# Importar famílias
-python -m automation families import --csv examples/familias.csv
-
-# Testar somente o login
-python -m automation login-test
+# outros exemplos de entidades
+python -m automation cells       import --env dev --csv examples/celulas.csv
+python -m automation members     import --env dev --csv examples/membros.csv
+python -m automation commissions import --env dev --csv examples/comissoes.csv
+python -m automation families    import --env dev --csv examples/familias.csv
 ```
 
 ### Opções globais disponíveis
 
-| Opção              | Descrição                                 |
-|--------------------|-------------------------------------------|
-| `-c, --config`     | Caminho para o arquivo de configuração    |
-| `--url`            | URL base da aplicação                     |
-| `-u, --username`   | Usuário para login                        |
-| `-p, --password`   | Senha para login                          |
-| `--headless`       | Modo headless (padrão)                    |
-| `--no-headless`    | Abre o navegador visivelmente             |
-| `--timeout`        | Timeout em milissegundos                  |
-| `--output-dir`     | Pasta de saída dos resultados             |
-| `--output-format`  | Formato dos resultados: `csv` ou `json`   |
+| Opção              | Descrição                                                      |
+|--------------------|----------------------------------------------------------------|
+| `--env`            | **Atalho de ambiente:** `dev` (localhost:3000) ou `prod` (app.icravivalista) |
+| `-c, --config`     | Caminho para o arquivo de configuração                         |
+| `--url`            | URL base manual (sobrescreve `--env`)                          |
+| `-u, --username`   | Usuário para login                                             |
+| `-p, --password`   | Senha para login                                               |
+| `--headless`       | Modo headless (padrão)                                         |
+| `--no-headless`    | Abre o navegador visivelmente                                  |
+| `--timeout`        | Timeout em milissegundos                                       |
+| `--output-dir`     | Pasta de saída dos resultados                                  |
+| `--output-format`  | Formato dos resultados: `csv` ou `json`                        |
 
 ### Exemplo com todas as opções
 

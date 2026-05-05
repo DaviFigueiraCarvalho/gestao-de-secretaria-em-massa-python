@@ -3,12 +3,13 @@ CLI da ferramenta de automação de formulários.
 
 Uso::
 
-    python -m automation churches import --csv examples/igrejas.csv
-    python -m automation cells import --csv examples/celulas.csv
-    python -m automation members import --csv examples/membros.csv
-    python -m automation commissions import --csv examples/comissoes.csv
-    python -m automation families import --csv examples/familias.csv
-    python -m automation login-test
+    # atalho de ambiente (dev = localhost:3000 | prod = app.icravivalista)
+    python -m automation churches import --env dev --csv examples/igrejas.csv
+    python -m automation churches import --env prod --csv examples/igrejas.csv
+
+    # ou passando a URL manualmente
+    python -m automation churches import --url http://localhost:3000 --csv examples/igrejas.csv
+    python -m automation login-test --env prod
 """
 from __future__ import annotations
 
@@ -20,12 +21,29 @@ from automation.config import apply_overrides, load_config
 
 
 # ---------------------------------------------------------------------------
+# Presets de ambiente
+# ---------------------------------------------------------------------------
+
+#: URLs pré-configuradas para cada ambiente
+ENV_URLS: dict[str, str] = {
+    "dev": "http://localhost:3000",
+    "prod": "https://app.icravivalista",
+}
+
+
+# ---------------------------------------------------------------------------
 # Opções globais compartilhadas por todos os sub-comandos
 # ---------------------------------------------------------------------------
 
 GLOBAL_OPTIONS = [
     click.option("--config", "-c", default=None, help="Caminho para config.yaml/.json"),
-    click.option("--url", default=None, help="URL base da aplicação"),
+    click.option(
+        "--env",
+        type=click.Choice(["dev", "prod"]),
+        default=None,
+        help="Ambiente alvo: dev (localhost:3000) ou prod (app.icravivalista)",
+    ),
+    click.option("--url", default=None, help="URL base da aplicação (sobrescreve --env)"),
     click.option("--username", "-u", default=None, help="Usuário para login"),
     click.option("--password", "-p", default=None, help="Senha para login"),
     click.option(
@@ -53,6 +71,7 @@ def global_options(func):
 
 def _build_config(
     config: str | None,
+    env: str | None,
     url: str | None,
     username: str | None,
     password: str | None,
@@ -61,11 +80,18 @@ def _build_config(
     output_dir: str | None,
     output_format: str | None,
 ):
-    """Carrega e aplica sobrescritas na configuração."""
+    """Carrega e aplica sobrescritas na configuração.
+
+    Prioridade da URL: --url > --env > config.yaml > padrão (localhost:3000).
+    """
     cfg = load_config(config)
+
+    # resolve URL: --url tem prioridade; se não informado, usa preset do --env
+    resolved_url = url or (ENV_URLS[env] if env else None)
+
     apply_overrides(
         cfg,
-        base_url=url,
+        base_url=resolved_url,
         username=username,
         password=password,
         headless=headless,
@@ -94,7 +120,7 @@ def cli() -> None:
 @cli.command("login-test")
 @global_options
 def login_test(
-    config, url, username, password, headless, timeout, output_dir, output_format
+    config, env, url, username, password, headless, timeout, output_dir, output_format
 ) -> None:
     """Testa o login na aplicação e imprime resultado."""
     from automation.browser import browser_context
@@ -102,7 +128,7 @@ def login_test(
     from automation.logger import logger
 
     cfg = _build_config(
-        config, url, username, password, headless, timeout, output_dir, output_format
+        config, env, url, username, password, headless, timeout, output_dir, output_format
     )
 
     logger.info("Testando login em %s ...", cfg.base_url)
@@ -156,6 +182,7 @@ def _make_entity_group(name: str, help_text: str) -> click.Group:
     def import_cmd(
         csv_path,
         config,
+        env,
         url,
         username,
         password,
@@ -166,7 +193,7 @@ def _make_entity_group(name: str, help_text: str) -> click.Group:
     ) -> None:
         """Importa registros a partir de um arquivo CSV."""
         cfg = _build_config(
-            config, url, username, password, headless, timeout, output_dir, output_format
+            config, env, url, username, password, headless, timeout, output_dir, output_format
         )
         _run_entity(name, cfg, csv_path)
 
